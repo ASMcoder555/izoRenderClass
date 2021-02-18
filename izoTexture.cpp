@@ -44,9 +44,25 @@ void izoTexture::loadTexture(int32_t ID, izoTextureObject textureObject) {
         throw NULL_POINTER_LIST;
     else if (ID >= textureListLenght)
         throw ID_OUT_OF_RANGE;
-    else
+    else {
         textureList[ID] = textureObject;
+    }
+ }
+
+void izoTexture::loadTexture(int32_t ID, string filePath) {
+    if (textureList == 0)
+        throw NULL_POINTER_LIST;
+    else if (ID >= textureListLenght)
+        throw ID_OUT_OF_RANGE;
+    else {
+        izoTextureObject textureObject;
+        textureObject.textureImage.loadFromFile(filePath);
+        textureObject.textureObject.loadFromImage(textureObject.textureImage);
+        textureList[ID] = textureObject;
+    }
 }
+
+
 
 izoTextureObject* izoTexture::getTexture(int32_t ID) {
     if (textureList == 0)

@@ -8,6 +8,7 @@ class izoTexture;
 using namespace std;
 using namespace sf;
 
+
 #define TEXTURE_MASTER_NULL_POINTER -1;
 class izoRender {
     RenderWindow* renderWindow;

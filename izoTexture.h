@@ -6,6 +6,7 @@ using namespace sf;
 
 struct izoTextureObject {
     Texture textureObject;
+    Image textureImage;
 };
 
 
@@ -25,5 +26,6 @@ public:
     izoTextureObject* getTextureList();
     int32_t getTextureListLenght();
     void loadTexture(int32_t ID, izoTextureObject textureObject);
+    void loadTexture(int32_t ID, string filePath);
     izoTextureObject* getTexture(int32_t ID);
 };
