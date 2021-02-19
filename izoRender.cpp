@@ -14,16 +14,27 @@ izoRender::izoRender(RenderWindow* renderWindow) : renderWindow(renderWindow) {
 
 void izoRender::draw() {
     RenderStates state;
-    for (int y = 0; y < mapMaster->getHeight(); y++) {
-        for (int x = 0; x < mapMaster->getWidth(); x++) {
-            izoMapCell cell = mapMaster->getCell(x, y);
-
-            state.transform = cell.floorTransform;
-            cell.floorSprite.move(x * mapMaster->getCellWidth(), y * mapMaster->getCellHeight());
-            renderWindow->draw(cell.floorSprite, state);
-            cell.floorSprite.move(-x * mapMaster->getCellWidth(), -y * mapMaster->getCellHeight());
+    int32_t width = mapMaster->getWidth(), height = mapMaster->getHeight();
+    izoMapCell* ptr = mapMaster->getCellObjectArray();
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            izoMapCell cell = ptr[x + y * width];
+            if (cell.floor != 0) {
+                state.transform = cell.floorTransform;
+                renderWindow->draw(cell.floorSprite, state);
+            }
+            if (cell.wall[0] != 0) {
+                state.transform = cell.wall_transform[0];
+                renderWindow->draw(cell.wallSprite[0], state);
+            }
+            if (cell.wall[1] != 0) {
+                state.transform = cell.wall_transform[1];
+                renderWindow->draw(cell.wallSprite[1], state);
+            }
         }
     }
+
+
 }
 
 void izoRender::setTextureMaster( izoTexture* _textureMaster ) {

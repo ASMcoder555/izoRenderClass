@@ -43,11 +43,13 @@ public:
     void setParent(izoRender* parent);
     void setCellObjectArray(int32_t width, int32_t height, izoMapCell* cellObjectArray);
     izoMapCell* getCellObjectArray();
-    int32_t getWidth();
-    int32_t getHeight();
+    int16_t getWidth();
+    int16_t getHeight();
+    int16_t getCellLongitude();
     void setCellWidth(int16_t cellWidth);
     void setCellHeight(int16_t cellHeight);
-    void setCellSize(int16_t cellWidth, int16_t cellHeight);
+    void setCellLongitude(int16_t cellLongitude);
+    void setCellSize(int16_t cellWidth, int16_t cellHeight, int16_t cellLongitude);
     int16_t getCellWidth();
     int16_t getCellHeight();
     void setCell(int32_t x, int32_t y, izoMapCell cell);
