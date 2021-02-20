@@ -23,6 +23,11 @@ void izoRender::draw() {
                 state.transform = cell.floorTransform;
                 renderWindow->draw(cell.floorSprite, state);
             }
+        }
+    }
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            izoMapCell cell = ptr[x + y * width];
             if (cell.wall[0] != 0) {
                 state.transform = cell.wall_transform[0];
                 renderWindow->draw(cell.wallSprite[0], state);
@@ -30,6 +35,16 @@ void izoRender::draw() {
             if (cell.wall[1] != 0) {
                 state.transform = cell.wall_transform[1];
                 renderWindow->draw(cell.wallSprite[1], state);
+            }
+            if (cell.objectList != 0) {
+                int32_t objectCount = cell.objectList->getObjectCounts();
+                while (objectCount > 0) {
+                    Transform objectTransform(1, 0, 0 + x * mapMaster->getCellWidth() + 560 - y * mapMaster->getCellHeight(), 0, 1, 0 + y * mapMaster->getCellHeight() + 250, 0, 0, 1);
+                    RenderStates state;
+                    state.transform = objectTransform;
+                    renderWindow->draw(cell.objectList->getObject(objectCount - 1).objectSprite, state);
+                    objectCount--;
+                }
             }
         }
     }

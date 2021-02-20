@@ -2,11 +2,14 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include "izoRender.h"
+#include "izoObject.h"
 class izoRender;
+class izoObjectList;
 using namespace std;
 using namespace sf;
 
 struct izoMapCell {
+    izoObjectList* objectList;
     int32_t floor;
     Sprite floorSprite;
     Transform floorTransform;
@@ -52,6 +55,8 @@ public:
     void setCellSize(int16_t cellWidth, int16_t cellHeight, int16_t cellLongitude);
     int16_t getCellWidth();
     int16_t getCellHeight();
+    izoObjectList* getObjectList(int32_t x, int32_t y);
+    void setObjectList(int32_t x, int32_t y,  izoObjectList* objectList);
     void setCell(int32_t x, int32_t y, izoMapCell cell);
     izoMapCell getCell(int32_t x, int32_t y);
 };

@@ -1,6 +1,10 @@
 #include "izoMap.h"
 #include "izoRender.h"
 
+#define render_offset_horizontal 550
+#define render_offset_vertical 250
+// Временно.
+
 izoMap::izoMap() : cell_width(64), cell_height(64), cell_longitude(64) {
     width = 0;
     height = 0;
@@ -93,7 +97,7 @@ void izoMap::setCell(int32_t x, int32_t y, izoMapCell cell) {
             float scale_y = static_cast<float>(cell_height) / static_cast<float>(texture->getSize().y);
             cell.floorSprite.scale(scale_x, scale_y);
             const float* matrix = cell.floorTransform.getMatrix();
-            cell.floorTransform = Transform(matrix[0], -1.0, 650, matrix[4], matrix[5], 200, matrix[8], matrix[9], matrix[10]);
+            cell.floorTransform = Transform(matrix[0], -1.0, render_offset_horizontal, matrix[4], matrix[5], render_offset_vertical, matrix[8], matrix[9], matrix[10]);
             if (cell.floor != 0)
                 cell.floorSprite.setTexture(*texture);
         }
@@ -105,7 +109,7 @@ void izoMap::setCell(int32_t x, int32_t y, izoMapCell cell) {
             float scale_y = static_cast<float>(cell_longitude) / static_cast<float>(texture->getSize().y);
             cell.wallSprite[0].scale(scale_x, scale_y);
             const float* matrix = cell.wall_transform[0].getMatrix();
-            cell.wall_transform[0] = Transform(matrix[0], matrix[1], 650 - cell_height * y, -1, matrix[5], 200 - cell_longitude +  cell_width * x , matrix[8], matrix[9], matrix[10]);
+            cell.wall_transform[0] = Transform(matrix[0], matrix[1], render_offset_horizontal - cell_height * y, -1, matrix[5], render_offset_vertical - cell_longitude +  cell_width * x , matrix[8], matrix[9], matrix[10]);
             if (cell.wall[0] != 0)
                 cell.wallSprite[0].setTexture(*texture);
         }
@@ -117,7 +121,7 @@ void izoMap::setCell(int32_t x, int32_t y, izoMapCell cell) {
             float scale_y = static_cast<float>(cell_longitude) / static_cast<float>(texture->getSize().y);
             cell.wallSprite[1].scale(scale_x, scale_y);
             const float* matrix = cell.wall_transform[1].getMatrix();
-            cell.wall_transform[1] = Transform(matrix[0], 0.0, 650 - cell_height * y, matrix[4], matrix[5], 200 - cell_longitude, matrix[8], matrix[9], matrix[10]);
+            cell.wall_transform[1] = Transform(matrix[0], 0.0, render_offset_horizontal - cell_height * y, matrix[4], matrix[5], render_offset_vertical - cell_longitude, matrix[8], matrix[9], matrix[10]);
             if (cell.wall[1] != 0)
                 cell.wallSprite[1].setTexture(*texture);
         }
@@ -134,4 +138,12 @@ izoMapCell izoMap::getCell(int32_t x, int32_t y) {
     else {
         return cellObjectArray[x + y * width];
     }
+}
+
+izoObjectList* izoMap::getObjectList(int32_t x, int32_t y ) {
+    return getCell(x, y).objectList;
+}
+
+void izoMap::setObjectList(int32_t x, int32_t y, izoObjectList* objectList ) {
+    cellObjectArray[x + y * width].objectList = objectList;
 }

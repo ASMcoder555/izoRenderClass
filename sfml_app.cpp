@@ -3,44 +3,62 @@
 #include "izoRender.h"
 #include "izoTexture.h"
 #include "izoMap.h"
+#include "izoObject.h"
 #include "time.h"
 #include <iostream>
 using namespace sf;
 using namespace std;
 
 
+const int map_width = 100, map_height = 100;
+
+
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(1400, 900), "SFML works!");
-    window.setFramerateLimit(60);
+    sf::RenderWindow window(sf::VideoMode(1400, 900), "izoRender");
+    window.setFramerateLimit(0);
 
     izoRender render(&window);
     izoTexture textures(10);
-    izoMap map(6, 6);
+    izoMap map(map_width, map_width);
     render.setTextureMaster(&textures);
     render.setMapMaster(&map);
-    map.setCellSize(128, 64, 150);
+    map.setCellSize(64, 32, 64);
     ///
-    textures.loadTexture(1, "texture.png");
-    textures.loadTexture(2, "texture1.png");
-    textures.loadTexture(3, "texture2.png");
-    textures.loadTexture(4, "texture3.png");
+    textures.loadTexture(1, "texture1.png");
+    textures.loadTexture(2, "floor.jpg");
+    textures.loadTexture(3, "wall.jpg");
+    textures.loadTexture(4, "wall.jpg");
+
+    textures.loadTexture(9, "grass.png");
     ///
-    for (int y = 0; y < 6; y++) {
-        for (int x = 0; x < 6; x++) {
+    for (int y = 0; y < map_width; y++) {
+        for (int x = 0; x < map_width; x++) {
             izoMapCell cell{ 0 };
             //cell.floor = ((x + y) % 2) + 1;
             cell.floor = 1;
             map.setCell(x, y, cell);
         }
     }
+
+    for (int y = 1; y < 4; y++) {
+        for (int x = 1; x < 4; x++) {
+            izoMapCell cell{ 0 };
+            //cell.floor = ((x + y) % 2) + 1;
+            cell.floor = 2;
+            map.setCell(x, y, cell);
+        }
+    }
+
     izoMapCell cell{ 0 };
-    cell.floor = 1;
+    cell.floor = 2;
     cell.wall[1] = 3;
     cell.wall[0] = 0;
     map.setCell(1, 1, cell);
     map.setCell(2, 1, cell);
     map.setCell(3, 1, cell);
+
+    cell.floor = 1;
 
     map.setCell(1, 4, cell);
     map.setCell(2, 4, cell);
@@ -56,7 +74,20 @@ int main()
     cell.wall[1] = 3;
     map.setCell(1, 4, cell);
     sf::Clock clock;
-    float lastTime = 0;
+    double lastTime = 0;
+    ///
+    izoObject testObject;
+    testObject.combination = false;
+    testObject.coordinate_x = 0;
+    testObject.coordinate_y = 0;
+    testObject.ID = 100;
+    testObject.objectSprite.setTexture(textures.getTexture(9)->textureObject);
+    testObject.objectSprite.setScale(0.20, 0.20);
+    testObject.number = 1;
+    izoObjectList* ptrObjectList = new izoObjectList;
+    ptrObjectList->addObject(testObject);
+
+    map.setObjectList(0, 5, ptrObjectList);
     ///
     while (window.isOpen())
     {
@@ -66,8 +97,8 @@ int main()
             if (event.type == sf::Event::Closed)
                 window.close();
         }
-        float currentTime = clock.restart().asSeconds();
-        float fps = 1.f / (currentTime - lastTime);
+        double currentTime = clock.restart().asSeconds();
+        double fps = 1.f / (currentTime - lastTime);
         cout << "FPS :" << fps << endl;
         currentTime = clock.restart().asSeconds();
         lastTime = currentTime;
